@@ -83,16 +83,14 @@ def add_book():
         title = book_form.title.data
         publication_date = book_form.publication_date.data or None
         price = book_form.price.data or None
-        created_at = book_form.created_at.data or None
-        updated_at = book_form.updated_at.data or None
 
         # logic to save book data to the database
         db = mysql.connect()
         cursor = db.cursor()
         cursor.execute("""
-            INSERT INTO BOOKS (title, author, publication_date, price, created_at, updated_at)
-            VALUES (%s,%s,%s,%s,%s,%s)
-            """, [title, author, publication_date, price, created_at, updated_at])
+            INSERT INTO books (title, author, publication_date, price)
+            VALUES (%s,%s,%s,%s)
+            """, [title, author, publication_date, price])
         db.commit()
 
         return jsonify({'message': 'Book created successfully'}), 201
