@@ -122,5 +122,17 @@ def add_book():
         return jsonify({'error': 'Invalid data'}), 400
 
 
+@app.route('/api/books/remove/<book_id>', methods=['DELETE'])
+def remove_book(book_id):
+    if book_id:
+        db = mysql.connect()
+        cursor = db.cursor()
+        cursor.execute('DELETE FROM books WHERE id=%s', book_id)
+        db.commit()
+        return jsonify({'message': 'Book deleted successfully'}), 201
+    else:
+        return jsonify({'error': 'Invalid data'}), 400
+
+
 if __name__ == '__main__':
     app.run(debug=True)
