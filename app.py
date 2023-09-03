@@ -13,6 +13,8 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
 app.config['MYSQL_DATABASE_DB'] = 'mydatabase'
 
+app.config['SECRET_KEY'] = 'super-key'  # needed for updating the db
+
 
 mysql = MySQL(app)
 
