@@ -24,12 +24,35 @@ def hello():
     return 'Hello, World'
 
 
+def process_books(raw_books):
+    processed_books = []
+    for book in raw_books:
+        processed_book = {
+            'id': book[0],
+            'title': book[1],
+            'author': book[2],
+            'publication_date': book[3],
+            'price': book[4],
+            'created_at': book[5],
+            'updated_at': book[6]
+        }
+        processed_books.append(processed_book)
+    return processed_books
+
+
+@app.route('/books', methods=['GET'])
+def books():
+    raw_all_books = json.loads(get_books().data)  # Deserialize JSON data
+    all_books = process_books(raw_all_books)
+    return render_template('books.html', books=all_books)
+
+
 @app.route('/api/books', methods=['GET'])
 def get_books():
     cursor = mysql.connect().cursor()
     cursor.execute('SELECT * FROM books')
-    books = cursor.fetchall()
-    return jsonify(books)
+    all_books = cursor.fetchall()
+    return jsonify(all_books)
 
 
 @app.route('/api/books/<book_id>', methods=['GET'])
