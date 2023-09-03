@@ -6,13 +6,13 @@ from flaskext.mysql import MySQL
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'super-key'
 
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
 app.config['MYSQL_DATABASE_DB'] = 'mydatabase'
+
 
 mysql = MySQL(app)
 
@@ -67,17 +67,6 @@ class BookForm(FlaskForm):
     created_at = DateTimeField('created_at')
     updated_at = DateTimeField('updated_at')
     submit = SubmitField('Submit')
-
-
-@app.route('/book_test', methods=['POST'])
-def book_test():
-    book_form = BookForm(request.form)
-    title = book_form.title
-    if book_form.author:
-        author = book_form.author
-        return 'All ok'
-    else:
-        return 'Error, no author!'
 
 
 @app.route('/api/books/add', methods=['POST'])
