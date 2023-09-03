@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, DateField, DecimalField, DateTimeField
 from wtforms.validators import DataRequired
 from flaskext.mysql import MySQL
 
@@ -51,7 +51,7 @@ def not_found(error):
 
 @app.errorhandler(400)
 def not_found(error):
-    return jsonify({'error': 'Bad request'}), 404
+    return jsonify({'error': 'Bad request'}), 400
 
 
 @app.errorhandler(417)
@@ -62,6 +62,10 @@ def not_found(error):
 class BookForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     author = StringField('Author', validators=[DataRequired()])
+    publication_date = DateField('publication_date')
+    price = DecimalField('price')
+    created_at = DateTimeField('created_at')
+    updated_at = DateTimeField('updated_at')
     submit = SubmitField('Submit')
 
 
@@ -82,7 +86,20 @@ def add_book():
     if book_form.validate():
         author = book_form.author
         title = book_form.title
+        publication_date = book_form.publication_date.data or None
+        price = book_form.price.data or None
+        created_at = book_form.created_at.data or None
+        updated_at = book_form.updated_at.data or None
+
         # logic to save book data to the database
+        db = mysql.connect()
+        cursor = db.cursor()
+        cursor.execute("""
+            INSERT INTO BOOKS (title, author, publication_date, price, created_at, updated_at)
+            VALUES (%s,%s,%s,%s,%s,%s)
+            """, [title, author, publication_date, price, created_at, updated_at])
+        db.commit()
+
         return jsonify({'message': 'Book created successfully'}), 201
     else:
         return jsonify({'error': 'Invalid data'}), 400
