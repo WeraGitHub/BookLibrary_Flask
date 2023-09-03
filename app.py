@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, DecimalField, DateTimeField
 # from wtforms.validators import DataRequired   # not used, because it was causing problems
 from flaskext.mysql import MySQL
+import json
 
 
 app = Flask(__name__)
