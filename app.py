@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, DecimalField, DateTimeField
-from wtforms.validators import DataRequired
+# from wtforms.validators import DataRequired   # not used, because it was causing problems
 from flaskext.mysql import MySQL
 
 
@@ -62,8 +62,11 @@ def not_found(error):
 
 
 class BookForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    author = StringField('Author', validators=[DataRequired()])
+    # the validation didn't work even when the data provided was correct.
+    # title = StringField('title', validators=[DataRequired()])
+    # author = StringField('author', validators=[DataRequired()])
+    title = StringField('title')
+    author = StringField('author')
     publication_date = DateField('publication_date')
     price = DecimalField('price')
     created_at = DateTimeField('created_at')
@@ -74,9 +77,10 @@ class BookForm(FlaskForm):
 @app.route('/api/books/add', methods=['POST'])
 def add_book():
     book_form = BookForm(request.form)
-    if book_form.validate():
-        author = book_form.author
-        title = book_form.title
+    # if book_form.validate():
+    if book_form.title.data is not None and book_form.author.data is not None:
+        author = book_form.author.data
+        title = book_form.title.data
         publication_date = book_form.publication_date.data or None
         price = book_form.price.data or None
         created_at = book_form.created_at.data or None
